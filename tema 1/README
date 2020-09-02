@@ -1,0 +1,16 @@
+Rezolvarea aceastei teme presupune, în mare, lucrul cu numere reale și cu condiții multiple.
+Pentru implementarea algoritmului am folosit numai funcții din biblioteca standard a limbajului C 
+(printf/scanf din stdio.h și fmodf din math.h), precum și patru funcții macro pentru a calcula 
+minimul și maximul a 2 sau 3 numere reale, utilizând o propriete matematică simplă pentru a calcula 
+minimul sau maximul a 3 numere aplicând funcția pe câte 2.
+Pentru mici optimizări de memorie am declarat variabilele R, G și B ca float și apoi le-am împarțit la 255,
+fără a folosi numere intregi intermediare, la fel și pentru H, S și V. Având în vedere că vechile valori 
+(înainte de normare) nu vor mai fi folosite nicăieri, putem stoca în aceleași variabile noile valori (după
+normare).
+Ca optimizare a timpului de execuție, în loc să număr pașii pâna la N * M, am preferat să adaug o variabilă
+cond = N * M și să o scad la fiecare iterație. De asemenea, am încercat să simplific algoritmul pe cât posibil
+(sau cel puțin să nu-l complic), respenctând cerințele temei.
+Cea mai mare parte a codului este pur și simplu traducerea din limbaj natural (limba română) în cod scris în
+limbajul C, ca de exemplu, formulele matematice pentru procedeul de normare. Aceste funcții matematice fiind 
+împărțite pe ramuri, a fost nevoie să folosesc instrucțiuni de testare a unei condiții (if) sau chiar să tratez 
+mai multe cazuri posibile pentru aceeași variabilă (else if).

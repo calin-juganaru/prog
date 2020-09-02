@@ -1,0 +1,41 @@
+    Cerința problemei se rezumă la determinarea orașelor prin care trece Moș Crăciun, plus ce tipuri de cadouri și câte din 
+fiecare tip va lua din fiecare oraș. Având în vedere că orașele vor trebui afișate în ordine lexicografică a numelor, și ni 
+se cere alocarea dinamică de memorie cât mai mult posibil, orașele pot fi reținute într-un arbore binar de căutare. Astfel, 
+arborele parcurs în inordine va itera prin orașele sortate lexicografic, totul va fi alocat dinamic, inserarea se va face 
+în timp aproximativ logaritmic (este, totuși, un simplu arbore binar de căutare, deci nu este echilibrat, precum un treap 
+sau arbore roșu-negru), iar ștergerea (dealocarea) este, practic, tot o parcurgere în inordine, în care aplic free() pe 
+fiecare nod prin care trec.
+    În secțiunea 'Mențiuni' din enunț este indicată folosirea unei structuri de date a cărei dimensiune inițială să fie de 
+două elemente, apoi, când se va umple, de 4, apoi 8, etc. Acesta ar putea fi un vector alocat dinamic și care se va redimen-
+siona singur la umplere, dar va face dificilă inserarea unui nou oraș, apoi, va trebui sortat pentru a putea afișa orașele 
+în ordine. Eu am ales arborele binar, deoarece mi se pare mai eficient ca timp de execuție. Într-un vector un element nou 
+poate fi inserat la sfărșit în timp O(1), dar va trebui sortat la final. Ar mai putea fi inserat și direct în poziția care 
+trebuie, dar trebuie ca următoarele elemente să fie deplasate cu câte o poziție la dreapta, deci timp O(n). În loc de vector, 
+am putea folosi o listă, dar aceasta ar avea cam aceleși probleme: inserarea nu necesită deplasarea elementelor din dreapta, 
+dar trebuie iterat prin toate elementele din stânga, deci tot o complexitate de timp O(n). În schimb, în arborele binar, noul 
+element va fi inserat direct în poziția corespunzătoare, după o căutare binară în timp aproximativ O(log2(n)), și apoi nu 
+mai trebuie umblat la nimic altceva din arbore în afară de 3 pointeri (cel către noul nod și cei către cei doi fii).
+    Totuși, ideea de vector alocat dinamic și care se va redimensiona am folosit-o într-o altă situație: cadourile dintr-un 
+oraș trebuie ordonate descrescător după numărul de apariții, iar dacă două sau mai multe tipuri de cadouri dintr-un oraș au 
+același număr de apariții atunci vor fi ordonate lexicografic după numele cadourilor. Aici pot crea o structură (pereche) ce
+să grupeze numele unui cadou și numărul său de apariții. Aceste perechi din fiecare oraș vor fi reținute într-un vector alocat 
+dinamic, o altă structură, care va avea, pe lângă pointer-ul la primul element din șirul de perechi, două variabile: dimensiunea 
+sa și numărul de elemente inserate. Dacă cele două sunt egale, înseamnă că vectorul s-a umplut și trebuie să-și mărească dimen-
+siunea. Aici am aplicat acea mențiune, pe ideea din spatele clasei std::vector<> din STL, vectorii mei își vor dubla capacitatea 
+la umplere. Ei vor putea inițial să rețină maxim două tipuri de cadouri, apoi 4, apoi 8, etc.
+    Deoarece Laponia este reprezentată ca o matrice de regiuni de dimensiune N x M, prin care va trece Moșul, iar pe fiecare 
+celulă din această matrice se găsesc informații despre ce oraș este, ce tip de cadou și câte, precum și indicații pentru depla-
+sarea la următoarea regiune, am ales să le rețin pe toate acestea într-o matrice numită 'harta'. Voi avea nevoie de ele stocate 
+pentru parcurgerea traseului Moșului și pentru decrementat numărul de cadouri din fiecare oraș după ce Moșul trece prin el.
+    Pe scurt, Moșul pornește din orașul aflat pe poziția (x, y) din matricea-hartă, apoi, conform indicațiilor din punctul în 
+care se află, va trece la următorul oraș, dar fără să depășească numărul maxim de pași. Din fiecare oraș prin care trece va lua, 
+dacă mai există, căte un cadou din tipul de cadou care se găsește acolo. La fiecare pas, încerc să inserez orașul curent în arbore, 
+dar dacă orașul există deja, încerc să inserez doar cadoul. În cazul în care și tipul cadoul se găsește deja în acel oraș, în 
+arbore, atunci doar incrementez numărul de cadouri de acel tip, din acel oraș. Există posibilitatea și ca într-un oraș să nu se 
+(mai găsească) niciun cadou, caz în care doar se va încerca inserarea noului oraș în arbore, dacă acesta nu există deja.
+    În rest, în fișierul sursă am comentat fiecare structură de date, fiecare funcție și fiecare parte din cod care am considerat 
+că ar necesita explicații.
+    
+    PS. Menționez că am folosit alocarea dinamică pe cât a fost posibil, practic, numai variabilele auxiliare (precum întregii 
+pentru for() sau valori de retur ale funcției strcmp() ) au fost alocate static. Arborele de orașe, vectorii de cadouri, matricea 
+de regiuni, chiar și toate șirurile de caractere (char *) au fost alocate dinamic, și, bineînțeles, dealocate la final. 

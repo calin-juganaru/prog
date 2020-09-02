@@ -1,0 +1,56 @@
+Problema se rezumă la crearea și afișarea unui obiect vizual format din structuri (celule) hexagonale.
+
+Cum afișarea la stdin (oriunde ar fi redirectată aceasta) se va face de la stânga la dreapta (pe linie)
+și de sus în jos (trecere la următoarea linie), este dificil să afișăm direct acele hexagoane, linie cu
+linie, așa cum o imprimantă tipărește pixelii, punct cu punct, pe o linie, și apoi trece la linia următoare.
+
+Ca soluție, am creat structurile hexagonalele (celulele) într-o matrice de caractere (tabloul fagurelui),
+generându-le pe coloane. Într-o matrice ne putem 'plimba' oricum și oricând, nu doar de la stânga la dreapta
+sau trecând la linia următoare. Am ales să folosesc o matrice de caractere (char fagure[][]) și nu un vector
+de string-uri (de exemplu char* fagure[]) deoarece nu am nevoie de terminator pentru linii (caracterul '\0')
+sau de lucrul cu string-uri, ci de posibilitatea de a mă 'plimba' prin tablou în mod aleator ('random access') 
+și de a reveni, dacă este cazul, la o anumită poziție pentru a o modifica.
+
+Cele două cazuri ce trebuiesc tratate individual depind de prima coloană dacă este 'ridicată' sau 'coborâtă'.
+În acest tablou generez întâi coloanele 'ridicate', din două în două, deci, de aceeași paritate, apoi pe cele
+'coborâte', tot din două în două, dar cu paritatea opusă primelor. Astfel, în cazul 'R', vor fi generate întâi 
+coloanele cu indice impar, apoi cele cu indice par. Cazul 'C' este exact invers: întâi cele pare, apoi impare.
+ 
+O celulă hexagonală poate fi disecată în cadrul tabloului în felul următor:
+
+        ...  j  j+1 j+2 ...
+       +---+---+---+---+---+
+  ...  |   |   | _ |   |   |
+       +---+---+---+---+---+
+   i   |   | / | Q | \ |   |
+       +---+---+---+---+---+
+  i+1  |   | \ | _ | / |   |
+       +---+---+---+---+---+
+  ...  |   |   |   |   |   |
+       +---+---+---+---+---+
+
+Observăm că am putea începe construcția unei celule din 'colțul' stânga-sus, adică din poziția (i, j).
+Dacă numim caracterul '_' de pe poziția (i - 1, j + 1) 'capac' și caracterul '_' de pe poziția
+(i + 1, j + 1) 'bază', atunci putem spune că baza unei celule poate fi capac pentru cea de sub ea 
+(dacă aceasta și există). Deci, afișăm întai capacele pentru prima celulă de pe fiecare coloană ridicată, 
+iar bazele acestora vor deveni capace pentru următoarele, care, la rândul lor, vor genera capace pentru 
+cele de dedesubt, și tot așa. Astfel, ne mai rămân de generat 'pereții' celulei, formați din caracterele 
+'/', '\', spațiu și 'Q'. În celula în care se află o regină, punem 'Q', altfel, spațiu.
+
+În implementare, am creat, deci, funcția desen_celula() pentru crearea unei celule în fagure, și 
+funcțiile caz_R() și caz_C() pentru tratarea separată a celor două cazuri, ambele generând fagurele
+în matrice pe coloane, după cum am descris mai sus.
+
+Totuși, pentru a reduce dimensiunile sursei, putem genera coloanele din 1 în 1, dar trebuie să folosim 
+indicii în mod diferit (cu mare atenție la paritatea lor). De asemenea, o celulă ocupă 6 elemente din matrice 
+(de la poziția (i, j) trasăm un dreptunghi până la poziția (i + 1, j + 2)), deci sunt necesare niște operații 
+aritmetice simple pentru caracterizarea unei celule prin coordonatele din matrice. Acestea se regăsesc în 
+funcțiile desen_celula(), caz_C() și caz_R(), la determinarea indicilor pentru vectori și matrici.
+
+În implementarea algoritmului determinat am urmărit o oarecare eficiență a programului și economie de resurse,
+chiar dacă nu era una dintre cerințele enunțului. De exemplu, știind că numerele citite au una sau două cifre, 
+am folosit tipul short, n-am alocat memorie 'cât să fie', ci doar cât am avut nevoie, și nu am făcut operații 
+fără vreun rost.
+
+În rest, consider că explicațiile scrise în comentariile din sursă sunt suficient de detaliate și explicite în 
+descrierea algoritmului și a implementării.
